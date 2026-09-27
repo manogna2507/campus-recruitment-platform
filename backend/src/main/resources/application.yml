@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: campus-recruitment-platform
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:h2:mem:campusdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+server:
+  port: 8080
+
+# IMPORTANT: override this via the JWT_SECRET env var in any real deployment.
+# Must be at least 32 bytes for HS256 signing.
+jwt:
+  secret: ${JWT_SECRET:ChangeThisSecretKeyToSomethingLongRandomAndSecure2024!}
+  expiration-ms: 86400000 # 24 hours
+
+aws:
+  region: ${AWS_REGION:ap-south-1}
+  s3:
+    bucket: ${S3_BUCKET:campus-recruitment-resumes-dev}
+    # leave blank for real AWS; set to http://localhost:4566 to point at LocalStack instead
+    endpoint: ${S3_ENDPOINT:}
+  dynamodb:
+    table-name: ${DYNAMODB_TABLE:application-status-history-dev}
+    endpoint: ${DYNAMODB_ENDPOINT:}
+
+scheduler:
+  job-expiry:
+    cron: ${JOB_EXPIRY_CRON:0 0 1 * * *} # daily at 01:00
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
